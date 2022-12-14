@@ -41,6 +41,11 @@ jobs:
           export CARGO_TARGET_DIR="$(pwd)/target"
           cargo install dbg-swc --target ${{ matrix.settings.target }}
 
+      - name: Version
+        if: matrix.settings.host == 'ubuntu-latest' || matrix.settings.target == 'x86_64-unknown-linux-gnu'
+        run: |
+          cargo install --list
+
       - name: Copy files
         shell: bash
         run: |
