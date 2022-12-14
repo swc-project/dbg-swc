@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  schedule:
+    - cron: '0 * * * *'  
+  push:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.settings.host }}
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+          - host: macos-latest
+            target: x86_64-apple-darwin
+          - host: macos-latest
+            target: aarch64-apple-darwin
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: rustup target add ${{ matrix.settings.target }}
+
+      - name: Build dbg-swc
+        run: cargo install dbg-swc --target ${{ matrix.settings.target }}
+
+      - name: Copy files
+        shell: bash
+        run: |
+          ls -al ~/.cargo/bin
+          cp ~/.cargo/bin/dbg-swc* dbg-swc-${{ matrix.settings.target }}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dbg-swc
+          path: |
+            dbg-swc-${{ matrix.settings.target }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+     - build
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: dbg-swc
+          path: bins
+          
+      - name: Display structure of downloaded files
+        shell: bash
+        run: ls -R
+        working-directory: bins
+
+      
