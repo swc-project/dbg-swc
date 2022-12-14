@@ -36,6 +36,7 @@ jobs:
           cache-on-failure: true
 
       - name: Build dbg-swc
+        shell: bash
         run: |
           export CARGO_TARGET_DIR="$(pwd)/target"
           cargo install dbg-swc --target ${{ matrix.settings.target }}
