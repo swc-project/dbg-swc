@@ -72,8 +72,7 @@ jobs:
       - name: Display structure of downloaded files
         shell: bash
         run: |
-          ls -R
-          cat version.txt
-        working-directory: bins
+          ls -R bins
+          cat bins/version.txt
 
       
