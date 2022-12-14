@@ -44,7 +44,7 @@ jobs:
       - name: Version
         if: matrix.settings.host == 'ubuntu-latest' || matrix.settings.target == 'x86_64-unknown-linux-gnu'
         run: |
-          cargo install --list | grep 'dbg-swc ' > version.txt
+          cargo install --list | grep 'dbg-swc ' | sed 's/://' | sed 's/dbg-swc //' > version.txt
 
       - name: Copy files
         shell: bash
