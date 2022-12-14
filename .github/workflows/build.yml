@@ -74,5 +74,13 @@ jobs:
         run: |
           ls -R bins
           cat bins/version.txt
+          echo "BIN_VERSION=$(cat bins/version.txt)" >> $GITHUB_ENV
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.BIN_VERSION }}
+          files: |
+            bins/*
 
       
